@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hidrometros"
+version = "0.1.0"
+description = "Water meter digit classification with CNNs (VC001 P2, group Luminus)"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "mypy>=1.10", "pandas-stubs", "types-Pillow"]
+
+[project.scripts]
+hidrometros = "hidrometros.cli:main"
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["src/hidrometros", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["cv2.*", "sklearn.*", "torchvision.*", "matplotlib.*", "nbformat.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

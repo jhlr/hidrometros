@@ -1,0 +1,30 @@
+# Environments
+.venv/
+venv/
+__pycache__/
+*.egg-info/
+.ipynb_checkpoints/
+.mypy_cache/
+.pytest_cache/
+
+# Dataset, generated crops and weights: never versioned (CC BY-NC-ND 4.0, course rule)
+data/
+digits/
+digits_extra/
+checkpoints/
+logs/
+local/
+*.pt
+*.pth
+*.ckpt
+mlflow.db
+mlruns/
+
+# Credentials
+kaggle*.json
+credentials*
+.env
+
+# OS / editor
+.DS_Store
+.vscode/
