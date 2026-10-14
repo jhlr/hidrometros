@@ -61,8 +61,8 @@ def find_boundaries(strip: Strip) -> list[float]:
             cost += RIGHT_EDGE_WEIGHT * max(0.0, MIN_RIGHT_EDGE - (off + pitch * N_CELLS))
             if cost < best_cost:
                 best_cost, best = cost, (float(off), float(pitch))
-    off, pitch = best
-    bounds = [off + k * pitch for k in range(N_CELLS + 1)]
+    best_off, best_pitch = best
+    bounds = [best_off + k * best_pitch for k in range(N_CELLS + 1)]
     refined = [bounds[0]]
     for k in range(1, N_CELLS):
         lo = max(bounds[k] - REFINE_RADIUS, refined[-1] + PITCH_RANGE[0] - 4)
