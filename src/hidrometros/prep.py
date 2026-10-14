@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -139,13 +140,14 @@ def write_crops(
     strips: dict[str, Strip],
     df: pd.DataFrame,
     out_dir: Path,
+    splitter: Callable[[Strip], list[Image.Image]] = crop_strip,
 ) -> pd.DataFrame:
     """Save `digits/{split}/{digit}/{image_id}_{position}.png` and return the index table."""
     rows: list[dict[str, object]] = []
     for name, image_id, label, split in zip(
         df["photo_name"], df["image_id"], df["label"], df["split"], strict=True
     ):
-        crops = crop_strip(strips[name])
+        crops = splitter(strips[name])
         for pos, crop in enumerate(crops):
             digit = int(label[pos])
             assert crop.size == CROP_SIZE

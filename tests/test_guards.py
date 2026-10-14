@@ -186,3 +186,15 @@ def test_label_parsing_padding() -> None:
     assert data.label_from_name("id_1_value_13_116.jpg") == "00013116"
     assert data.label_from_name("id_2_value_21_86.jpg") == "00021860"
     assert data.label_from_name("id_664_value_45_2676.jpg") is None
+
+
+def test_real_matplotlib_png_is_accepted(tmp_path: Path) -> None:
+    """Given a PNG written by matplotlib (Software tag 'Matplotlib version...'), When checked, Then it is a plot."""
+    import matplotlib.pyplot as plt
+
+    (tmp_path / "figures").mkdir()
+    fig, ax = plt.subplots()
+    ax.plot([0, 1])
+    fig.savefig(tmp_path / "figures" / "plot.png")
+    plt.close(fig)
+    assert criteria.non_plot_figures(["figures/plot.png"], tmp_path) == []

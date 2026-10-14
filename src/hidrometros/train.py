@@ -82,7 +82,16 @@ SMOKE = Variant(
     data.ROOT / "local" / "smoke" / "reports",
     data.ROOT / "local" / "smoke" / "results.csv",
 )
-VARIANTS: dict[str, Variant] = {v.tag: v for v in (BASE, EXTRA, SMOKE)}
+#: Diagnostics outside the protocol (e.g. early stopping disabled); never feeds results.csv.
+DIAG = Variant(
+    "diag",
+    data.DIGITS_DIR / "index.csv",
+    data.ROOT / "local" / "diag",
+    data.ROOT / "local" / "diag" / "ckpt",
+    data.ROOT / "local" / "diag" / "reports",
+    data.ROOT / "local" / "diag" / "results.csv",
+)
+VARIANTS: dict[str, Variant] = {v.tag: v for v in (BASE, EXTRA, SMOKE, DIAG)}
 
 
 def get_device() -> torch.device:
@@ -241,10 +250,12 @@ def run_training(
     max_epochs: int | None = None,
     limit_train: int | None = None,
     limit_val: int | None = None,
+    patience: int = EARLY_STOP_PATIENCE,
 ) -> pd.DataFrame:
     """Train one model under the common protocol and return its history table.
 
-    `max_epochs`, `limit_train` and `limit_val` exist only for the smoke test; real runs leave them None.
+    `max_epochs`, `limit_train` and `limit_val` exist only for the smoke test and `patience` only for
+    diagnostics outside the protocol; real runs leave them at their defaults.
     """
     spec = PROTOCOL[name]
     device = get_device()
@@ -293,7 +304,7 @@ def run_training(
         with history_path.open("w", newline="") as f:
             csv.writer(f).writerow(HISTORY_COLUMNS)
 
-    while state.epoch < epochs and state.bad_epochs < EARLY_STOP_PATIENCE:
+    while state.epoch < epochs and state.bad_epochs < patience:
         epoch = state.epoch + 1
         frozen = spec.pretrained and epoch == 1
         set_backbone_frozen(model, name, frozen)

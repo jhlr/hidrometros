@@ -256,7 +256,7 @@ def non_plot_figures(files: list[str], root: Path = ROOT) -> list[str]:
     for f in files:
         if f.startswith(("figures/", "docs/")) and _IMAGE.search(f):
             info = Image.open(root / f).info
-            if not str(info.get("Software", "")).startswith("matplotlib"):
+            if not str(info.get("Software", "")).lower().startswith("matplotlib"):
                 out.append(f)
     return out
 

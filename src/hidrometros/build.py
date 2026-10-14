@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import json
+from collections.abc import Callable
+
 import numpy as np
 import pandas as pd
+from PIL import Image
 
 from hidrometros import data, orientation, prep
 
@@ -72,4 +76,39 @@ def run_prep() -> dict[str, object]:
         "images_in_multiple_splits": int((index.groupby("photo_name")["split"].nunique() > 1).sum()),
     }
     prep.stats_to_json(stats)
+    return stats
+
+
+def run_prep_extra() -> dict[str, object]:
+    """Extra challenge: same oriented strips, digit cells located by `splitting` instead of equal widths.
+
+    Writes `digits_extra/` (gitignored) and `digits_extra/index.csv`; returns the crop-quality counts
+    of both splitters (also written to `reports/extra_split_stats.json`).
+    """
+    from hidrometros import splitting
+
+    valid = data.valid_annotations()
+    strips = prep.load_strips()
+    out_dir = data.ROOT / "digits_extra"
+    index = prep.write_crops(strips, valid, out_dir, splitter=splitting.split_strip)
+    index.to_csv(out_dir / "index.csv", index=False)
+
+    def edge_counts(splitter: Callable[[prep.Strip], list[Image.Image]]) -> dict[str, int]:
+        left = right = both = crops = images_any = 0
+        for name in valid["photo_name"]:
+            any_cut = False
+            for c in splitter(strips[name]):
+                lo, hi = splitting.edge_ink_fraction(c)
+                left, right, both, crops = left + lo, right + hi, both + (lo and hi), crops + 1
+                any_cut = any_cut or lo or hi
+            images_any += any_cut
+        return {"crops": crops, "ink_on_left_edge": left, "ink_on_right_edge": right, "ink_on_both_edges": both, "images_with_a_cut_crop": images_any}
+
+    stats: dict[str, object] = {
+        "equal_width": edge_counts(prep.crop_strip),
+        "located_boundaries": edge_counts(splitting.split_strip),
+        "n_crops_extra": len(index),
+    }
+    path = data.ROOT / "reports" / "extra_split_stats.json"
+    path.write_text(json.dumps(stats, indent=2))
     return stats

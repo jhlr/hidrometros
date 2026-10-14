@@ -18,6 +18,8 @@ plt.switch_backend("Agg")
 
 FIG_DIR: Path = data.ROOT / "figures"
 # Okabe-Ito colorblind-safe palette
+LABEL_OFFSETS = {"smallcnn": (10, -4), "alexnet": (14, -30), "vgg16_bn": (-8, -62), "resnet18": (-14, 12)}
+LABEL_HA = {"smallcnn": "left", "alexnet": "left", "vgg16_bn": "right", "resnet18": "right"}
 COLORS = {"smallcnn": "#0072B2", "alexnet": "#E69F00", "vgg16_bn": "#009E73", "resnet18": "#D55E00"}
 
 
@@ -56,10 +58,10 @@ def accuracy_by_position(variant: Variant = BASE, out: Path = FIG_DIR / "accurac
     ax.set_xticks(range(8), labels=[f"{i}\n({'int' if i < 5 else 'dec'})" for i in range(8)])
     ax.set_xlabel("digit position (left to right; int = integer wheels, dec = decimal wheels)")
     ax.set_ylabel("test accuracy per crop")
-    ax.set_ylim(max(0.0, min(lows) - 0.05), 1.0)
+    ax.set_ylim(0.0, 1.0)
     ax.set_title("Accuracy by digit position (test split)")
     ax.grid(axis="y", alpha=0.3)
-    ax.legend(ncol=4, loc="lower left")
+    ax.legend(loc="upper left", bbox_to_anchor=(1.01, 1.0), title="model")
     fig.savefig(out, dpi=150)
     plt.close(fig)
     return out
@@ -94,7 +96,7 @@ def performance_vs_cost(results_csv: Path = BASE.results_csv, out: Path = FIG_DI
         name = str(df["model"].iloc[i])
         ms, f1, params = float(df["ms_per_image"].iloc[i]), float(df["f1_macro"].iloc[i]), float(df["params_M"].iloc[i])
         ax.scatter([ms], [f1], s=60 + 12 * params, color=COLORS[name], edgecolor="black", zorder=3)
-        ax.annotate(f"{name}\n{params:.1f}M params", (ms, f1), textcoords="offset points", xytext=(8, -4), fontsize=9)
+        ax.annotate(f"{name}\n{params:.1f}M params", (ms, f1), textcoords="offset points", xytext=LABEL_OFFSETS[name], fontsize=9, ha=LABEL_HA[name])
     ax.set_xlabel("inference time per image, batch 1 (ms, log scale; lower is better)")
     ax.set_ylabel("test F1-macro (higher is better)")
     ax.set_xscale("log")
