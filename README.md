@@ -199,7 +199,7 @@ Todas as respostas abaixo são **rascunhos** escritos a partir dos números dest
 
 **Este trabalho foi feito com Desenvolvimento Guiado por Especificação (Spec-Driven Development, SDD).** A especificação (`docs/SPEC.md`, v1.3, de 2026-10-13) foi escrita e aprovada antes do código e está commitada no repositório: [`docs/SPEC.md`](docs/SPEC.md). A IA (Claude, da Anthropic, via Claude Code) executou a especificação; as decisões foram do grupo.
 
-**Procedência do código inicial.** O esqueleto inicial (`SmallCNN`, `build_model`, funções de congelar/descongelar, divisão em 8 recortes, métricas e `set_seed`) foi escrito por **Mikael de Albuquerque Mulatinho** (integrante do grupo, humano) e está no histórico do git com autoria dele (commit `152bc8b`). Foi depois estendido e corrigido sob a especificação; não é produto da IA. Se Mikael usou alguma ferramenta de IA nesse esqueleto: `[PREENCHER PELO GRUPO]`.
+**Procedência do código inicial.** O esqueleto inicial (`SmallCNN`, `build_model`, funções de congelar/descongelar, divisão em 8 recortes, métricas e `set_seed`) foi escrito por **Mikael de Albuquerque Mulatinho** (integrante do grupo, humano) e está no histórico do git com autoria dele (commit `152bc8b`). Foi depois estendido e corrigido sob a especificação; não é produto da IA. O Mikael informou ao grupo que não usou ferramenta de IA nesse esqueleto.
 
 **O que a IA fez e o que o grupo decidiu ou verificou:**
 
@@ -210,6 +210,7 @@ Todas as respostas abaixo são **rascunhos** escritos a partir dos números dest
 | F2 EDA | Estrutura de `data.csv`, fonte do rótulo, prior dos dígitos | Revisão dos achados (Q 1.1 a 2.2) |
 | F3 preparação | Retificação, regra do vermelho, classificador de orientação, auditoria, recortes | Conferiu o portão 1: todas as faixas das folhas de auditoria estavam em pé |
 | F4 treino | Treinou os 4 modelos sob o mesmo protocolo na MPS | D1: treino local com batches de MPS/CPU |
+| F4b correção da smallcnn | Isolou a causa raiz (cabeça com *global average pooling*), corrigiu a cabeça, retreinou só a `smallcnn`, escreveu o teste-guarda (visto vermelho antes) | Aceitou a mudança de arquitetura da `smallcnn` como alteração documentada |
 | F5 avaliação | `results.csv`, relatórios, 4 figuras | Revisão dos resultados |
 | F6 extra | Divisão de dígitos pelas fronteiras, retreino com o mesmo protocolo | D5: desafio extra decidido, arquivo separado |
 | F7 documentação | Rascunho do README e das respostas a partir de `results.csv` | D4: o grupo reescreve respostas e limitações com as próprias palavras |
@@ -230,15 +231,11 @@ Todas as respostas abaixo são **rascunhos** escritos a partir dos números dest
 | 10 notebook sem imagens | `test_c10_*` | `9ff36ba`, `446b42b` |
 | 11 README == `results.csv` | `test_c11_*` | README final |
 | 12 git sem imagens/crops/checkpoints/credenciais | `test_c12_*` | `9ff36ba`, `446b42b` |
-| 13 repositório público | `make check` (c13) | pendente: o grupo torna público |
+| 13 repositório público | `make check` (c13) | repositório tornado público em 2026-10-14 |
 | 14 guardas vistas em vermelho | `docs/2026-10-13-guard-red.md` | README final |
 
 **Respostas e limitações:** a IA escreveu rascunhos a partir de `results.csv` e dos logs; o grupo as reescreve com as próprias palavras (marcador `RASCUNHO` em cada resposta).
 
-**Campo para o grupo colar no template do Google Classroom** (a IA não tem acesso a ele):
+**Texto para colar no template do Google Classroom** (a IA não tem acesso ao template; este texto resume esta declaração):
 
-`[COLAR AQUI O TEXTO EQUIVALENTE NO TEMPLATE DO CLASSROOM]`
-
-## Créditos
-
-Esqueleto inicial: Mikael de Albuquerque Mulatinho. Dados: Yandex.Toloka (CC BY-NC-ND 4.0). Enunciado: professor da disciplina (`eron93br/vc-20262-p2`).
+> Usamos Claude (Anthropic) via Claude Code como apoio de codificação, seguindo Desenvolvimento Guiado por Especificação (SDD): a especificação completa foi escrita e aprovada pelo grupo antes do código e está em `docs/SPEC.md` no repositório. A IA implementou a pipeline (preparação dos recortes, correção de orientação, treino e avaliação dos quatro modelos, figuras) e escreveu rascunhos do README e das respostas a partir de `results.csv`. O grupo definiu o escopo e as decisões (treino local, nenhuma foto do dataset no git, desafio extra em arquivo separado), conferiu as folhas de auditoria de orientação e os resultados, e revisa e reescreve as respostas e as limitações com as próprias palavras. O esqueleto inicial do código é do integrante Mikael de Albuquerque Mulatinho, que informou não ter usado IA nele. Um defeito da `smallcnn` do esqueleto (cabeça com *global average pooling*) foi diagnosticado e corrigido com a IA, e está documentado no README (resposta 5.6) e em `docs/`. Todas as métricas vêm de `results.csv`, e o histórico completo está nos commits e em `docs/`.
