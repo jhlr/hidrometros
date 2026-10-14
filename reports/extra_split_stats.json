@@ -1,0 +1,17 @@
+{
+  "equal_width": {
+    "crops": 9944,
+    "ink_on_left_edge": 5450,
+    "ink_on_right_edge": 5289,
+    "ink_on_both_edges": 4238,
+    "images_with_a_cut_crop": 1147
+  },
+  "located_boundaries": {
+    "crops": 9944,
+    "ink_on_left_edge": 4105,
+    "ink_on_right_edge": 4267,
+    "ink_on_both_edges": 3115,
+    "images_with_a_cut_crop": 1095
+  },
+  "n_crops_extra": 9944
+}

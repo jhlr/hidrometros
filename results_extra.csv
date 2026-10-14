@@ -1,0 +1,5 @@
+model,acc_digit,f1_macro,acc_reading,params_M,s_per_epoch,ms_per_image,ckpt_MB,best_epoch
+smallcnn,0.2259,0.0886,0.0000,0.09,8.0,1.54,0.4,1
+alexnet,0.9218,0.9040,0.6417,57.04,30.7,5.99,228.2,7
+vgg16_bn,0.9425,0.9346,0.7594,134.31,446.1,22.64,537.3,7
+resnet18,0.9566,0.9505,0.8128,11.18,51.2,6.53,44.8,6

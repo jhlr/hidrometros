@@ -40,6 +40,25 @@ def protocol_table(results_csv: Path = BASE.results_csv) -> str:
     return "\n".join(lines)
 
 
+def extra_table(results_extra: Path = data.ROOT / "results_extra.csv", results_csv: Path = BASE.results_csv) -> str:
+    """Extra-challenge results (separate file) next to the baseline deltas for acc_digit, f1_macro and acc_reading."""
+    ex = pd.read_csv(results_extra, dtype=str)
+    base = pd.read_csv(results_csv).set_index("model")
+    lines = [
+        "| model | acc_digit | f1_macro | acc_reading | best_epoch | Δ acc_digit | Δ f1_macro | Δ acc_reading |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for row in ex.to_dict("records"):
+        b = base.loc[row["model"]]
+        d = [float(row[c]) - float(b[c]) for c in ("acc_digit", "f1_macro", "acc_reading")]
+        lines.append(
+            f"| {row['model']} | {row['acc_digit']} | {row['f1_macro']} | {row['acc_reading']} | {row['best_epoch']} | "
+            + " | ".join(f"{x:+.4f}" for x in d)
+            + " |"
+        )
+    return "\n".join(lines)
+
+
 def replace_block(text: str, tag: str, body: str) -> str:
     """Replace the content between `<!-- tag:start -->` and `<!-- tag:end -->`."""
     pattern = re.compile(rf"(<!-- {tag}:start -->\n).*?(\n<!-- {tag}:end -->)", re.S)
@@ -52,6 +71,8 @@ def main() -> None:
     text = README.read_text()
     text = replace_block(text, "results", results_table())
     text = replace_block(text, "protocol", protocol_table())
+    if (data.ROOT / "results_extra.csv").exists():
+        text = replace_block(text, "extra", extra_table())
     README.write_text(text)
     print("README generated blocks updated")
 

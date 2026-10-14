@@ -201,6 +201,9 @@ def _answer(text: str, q: str) -> str:
 
 def readme_results_block(text: str) -> list[list[str]]:
     """Rows of the results table in the README (header excluded), as strings."""
+    m = re.search(r"<!-- results:start -->(.*?)<!-- results:end -->", text, re.S)
+    if m:  # only the generated baseline block; other tables (e.g. the extra challenge) are separate
+        text = m.group(1)
     lines = [ln for ln in text.splitlines() if ln.startswith("| ") and re.match(r"\|\s*(smallcnn|alexnet|vgg16_bn|resnet18)\b", ln)]
     rows = [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines]
     return [r for r in rows if len(r) == len(RESULT_COLUMNS)]
