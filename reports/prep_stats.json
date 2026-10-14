@@ -1,0 +1,59 @@
+{
+  "n_annotated": 1244,
+  "n_valid": 1243,
+  "discarded": [
+    "id_664_value_45_2676.jpg"
+  ],
+  "n_crops": 9944,
+  "crops_per_split": {
+    "train": 6960,
+    "test": 1496,
+    "val": 1488
+  },
+  "images_per_split": {
+    "train": 870,
+    "test": 187,
+    "val": 186
+  },
+  "rotated_by_geometry": 136,
+  "red_rule_counts": {
+    "upright": 840,
+    "no_red": 333,
+    "upside_down": 39,
+    "ambiguous": 31
+  },
+  "flipped_by_red_rule": 39,
+  "flipped_by_classifier": 26,
+  "overrides_applied": 9,
+  "audit_false_flips_corrected_rule": 3,
+  "audit_false_flips_corrected_clf": 6,
+  "flips_kept_rule": 36,
+  "flips_kept_clf": 20,
+  "flipped_final": 56,
+  "undecided_by_rule": 364,
+  "classifier_train_metrics": {
+    "holdout_acc_full": 0.9888888716697692,
+    "holdout_acc_right_masked": 0.9854700684547424,
+    "n_fit_strips": 469.0,
+    "n_holdout_strips": 117.0,
+    "n_members": 5.0
+  },
+  "classifier_agreement_with_rule_by_split": {
+    "test": 1.0,
+    "train": 0.9951,
+    "val": 0.9762
+  },
+  "digit_distribution": {
+    "0": 3549,
+    "1": 1003,
+    "2": 777,
+    "3": 779,
+    "4": 698,
+    "5": 677,
+    "6": 638,
+    "7": 620,
+    "8": 613,
+    "9": 590
+  },
+  "images_in_multiple_splits": 0
+}
