@@ -117,14 +117,23 @@ def format_row(row: dict[str, float | str]) -> dict[str, str]:
 
 
 def write_results(variant: Variant = BASE, names: tuple[str, ...] = MODEL_NAMES) -> pd.DataFrame:
-    """Evaluate every model on test and write the results CSV (and confusion matrices as .npy)."""
-    rows: list[dict[str, str]] = []
-    cms: dict[str, npt.NDArray[np.int64]] = {}
+    """Evaluate `names` on test and write the results CSV (and confusion matrices as .npy).
+
+    A subset of the models replaces only its own rows and matrices and keeps the others as they are, so
+    re-running one model does not re-measure (or change) the cost columns of the rest.
+    """
+    cm_path = variant.reports_dir / "confusion_matrices.json"
+    rows: dict[str, dict[str, str]] = {}
+    cms: dict[str, list[list[int]]] = {}
+    if set(names) != set(MODEL_NAMES):
+        old = pd.read_csv(variant.results_csv, dtype=str)
+        rows = {str(r["model"]): {str(k): str(v) for k, v in r.items()} for r in old.to_dict("records")}
+        cms = json.loads(cm_path.read_text())
     for name in names:
         row, _, cm = evaluate_model(name, variant)
-        rows.append(format_row(row))
-        cms[name] = cm
-    df = pd.DataFrame(rows, columns=RESULT_COLUMNS)
+        rows[name] = format_row(row)
+        cms[name] = cm.tolist()
+    df = pd.DataFrame([rows[n] for n in MODEL_NAMES], columns=RESULT_COLUMNS)
     df.to_csv(variant.results_csv, index=False)
-    (variant.reports_dir / "confusion_matrices.json").write_text(json.dumps({k: v.tolist() for k, v in cms.items()}))
+    cm_path.write_text(json.dumps({n: cms[n] for n in MODEL_NAMES}))
     return df

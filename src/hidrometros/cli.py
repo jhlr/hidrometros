@@ -22,6 +22,7 @@ def main(argv: list[str] | None = None) -> None:
     p_train.add_argument("--resume", action="store_true")
     p_eval = sub.add_parser("evaluate", help="test-split metrics -> results csv, reports")
     p_eval.add_argument("--variant", default="base", choices=["base", "extra"])
+    p_eval.add_argument("--models", nargs="+", choices=["smallcnn", "alexnet", "vgg16_bn", "resnet18"], help="re-evaluate only these; other rows are kept")
     sub.add_parser("figures", help="draw the 4 required figures from results and histories")
     sub.add_parser("readme", help="regenerate the generated parts of README.md from results.csv")
     args = parser.parse_args(argv)
@@ -68,7 +69,10 @@ def main(argv: list[str] | None = None) -> None:
         from hidrometros.evaluate import write_results
         from hidrometros.train import VARIANTS
 
-        print(write_results(VARIANTS[args.variant]).to_string(index=False))
+        from hidrometros.models import MODEL_NAMES
+
+        names = tuple(args.models) if args.models else MODEL_NAMES
+        print(write_results(VARIANTS[args.variant], names).to_string(index=False))
     elif args.cmd == "figures":
         from hidrometros import figures
 

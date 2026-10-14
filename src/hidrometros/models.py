@@ -47,19 +47,26 @@ SEED = 42
 
 
 class SmallCNN(nn.Module):
-    """Small reference CNN trained from scratch for 10 classes."""
+    """Small reference CNN trained from scratch for 10 classes.
+
+    The scaffold ended in `AdaptiveAvgPool2d((1, 1))`. With 3x3 convs and two 2x2 pools the receptive
+    field is only 18 px, so averaging the whole map over space leaves a bag of local features that
+    cannot tell where a stroke is, and the model never left the majority class (see
+    `docs/2026-10-14-smallcnn-root-cause.md`). The 16x12 map is now flattened into the linear head, which
+    keeps the spatial layout; trunk, input size and everything else are unchanged.
+    """
 
     def __init__(self, num_classes: int = NUM_CLASSES) -> None:
         super().__init__()
+        height, width = PROTOCOL["smallcnn"].input_hw
         self.features = nn.Sequential(
             nn.Conv2d(3, 32, 3, padding=1), nn.BatchNorm2d(32), nn.ReLU(),
             nn.MaxPool2d(2),
             nn.Conv2d(32, 64, 3, padding=1), nn.BatchNorm2d(64), nn.ReLU(),
             nn.MaxPool2d(2),
             nn.Conv2d(64, 128, 3, padding=1), nn.BatchNorm2d(128), nn.ReLU(),
-            nn.AdaptiveAvgPool2d((1, 1)),
         )
-        self.classifier = nn.Linear(128, num_classes)
+        self.classifier = nn.Linear(128 * (height // 4) * (width // 4), num_classes)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return torch.as_tensor(self.classifier(self.features(x).flatten(1)))

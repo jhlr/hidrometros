@@ -1,0 +1,11 @@
+{'n': 0, 'aug': 'protocol', 'sched': 'onecycle', 'lr': 0.001, 'epochs': 10, 'bs': 128, 'norm': 'none', 'ls': 0.1, 'arch': 'orig', 'wd': 0.01, 'tag': '', 'dev': 'mps'} steps/epoch 55 params 94986
+ep 1 tl=2.365 ta=0.111 vl=2.298 va=0.209 vf1=0.075
+ep 2 tl=2.106 ta=0.342 vl=2.014 va=0.358 vf1=0.067
+ep 3 tl=2.028 ta=0.357 vl=1.947 va=0.364 vf1=0.062
+ep 4 tl=1.999 ta=0.361 vl=1.947 va=0.363 vf1=0.063
+ep 5 tl=1.947 ta=0.371 vl=1.851 va=0.384 vf1=0.087
+ep 6 tl=1.895 ta=0.385 vl=1.789 va=0.397 vf1=0.114
+ep 7 tl=1.843 ta=0.407 vl=1.719 va=0.416 vf1=0.140
+ep 8 tl=1.803 ta=0.422 vl=1.714 va=0.414 vf1=0.155
+ep 9 tl=1.781 ta=0.429 vl=1.670 va=0.442 vf1=0.195
+ep 10 tl=1.769 ta=0.439 vl=1.664 va=0.438 vf1=0.194

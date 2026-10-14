@@ -1,0 +1,11 @@
+{'n': 0, 'aug': 'protocol', 'sched': 'onecycle', 'lr': 0.001, 'epochs': 10, 'bs': 128, 'norm': 'imagenet', 'ls': 0.1, 'arch': 'flat', 'wd': 0.01, 'tag': '', 'dev': 'mps'} steps/epoch 55 params 339466
+ep 1 tl=2.076 ta=0.352 vl=1.844 va=0.403 vf1=0.156
+ep 2 tl=1.937 ta=0.420 vl=1.730 va=0.396 vf1=0.297
+ep 3 tl=1.716 ta=0.531 vl=1.556 va=0.481 vf1=0.448
+ep 4 tl=1.474 ta=0.625 vl=1.043 va=0.683 vf1=0.586
+ep 5 tl=1.292 ta=0.696 vl=0.917 va=0.739 vf1=0.677
+ep 6 tl=1.202 ta=0.737 vl=0.872 va=0.746 vf1=0.683
+ep 7 tl=1.100 ta=0.784 vl=0.816 va=0.784 vf1=0.726
+ep 8 tl=1.042 ta=0.814 vl=0.767 va=0.808 vf1=0.767
+ep 9 tl=0.992 ta=0.842 vl=0.739 va=0.807 vf1=0.766
+ep 10 tl=0.960 ta=0.854 vl=0.731 va=0.825 vf1=0.785
